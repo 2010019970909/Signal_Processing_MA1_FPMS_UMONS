@@ -2,7 +2,7 @@
 """
 Created on Mon Dec  3 14:07:36 2018
 
-@author: Vincent
+@author: Vincent STRAGIER
 """
 __author__ = 'Vincent STRAGIER'
 
@@ -13,7 +13,6 @@ from os.path import isfile, join
 
 # For maths
 import numpy as np
-# import matplotlib.pyplot as plt
 import matplotlib.mlab as mlab # To use xcorr without pyplot
 
 # Import all the files in a directory
@@ -117,7 +116,7 @@ def pitch_voiced_autocorr(frames, sampling_frequency, threshold = 0.3):
             
             # Compute the picth frequency
             pitch.append(sampling_frequency/index_)
-            #print(pitch[i])
+            # print(pitch[i])
             
             # Correct the index to display it on the full plot
             index.append(index_+int(len(autocorr)/2))

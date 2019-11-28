@@ -2,7 +2,7 @@
 """
 Created on Mon Dec  3 16:26:41 2018
 
-@author: Vincent
+@author: Vincent STRAGIER
 """
 __author__ = 'Vincent STRAGIER'
 
@@ -44,24 +44,7 @@ def main():
     set_of_samples_frames  = []
     for i in range(number_of_samples):
         set_of_samples_frames.append(splicer(normalized_set[i], widths_arrays[i], shifting_steps_arrays[i], sampling_frequencies[i]))
-    # del widths_arrays, shifting_steps_arrays
     print("Done in " + str(time.time() - start_time) + " seconds.\n")
-
-    """
-    import matplotlib.pyplot as plt
-    # Compute the energy of each frame in each sample (for test purpose only)
-    print("Compute the energy of each frame")
-    start_time = time.time()
-    plt.close('all')
-    for i in range(number_of_samples):
-        plt.figure(i+1)
-        y = signal_energy(set_of_samples_frames[i])
-        x = np.arange(len(y))/sampling_frequencies[i]
-        plt.plot(x, y)
-        
-    print("Done in " + str(time.time() - start_time) + " seconds.\n")
-    # input('PAUSE, press any key to continue')
-    """
 
     print("Compute the pitch")
     start_time = time.time()
@@ -71,8 +54,6 @@ def main():
         pitch_of_voiced_frames_in_each_samples.append(pitch_voiced_autocorr(set_of_samples_frames[i], sampling_frequencies[i], 0.3)[0])
     # del set_of_samples_frames, sampling_frequencies
     print("Done in " + str(time.time() - start_time) + " seconds.\n")
-
-    #plt.close('all')
 
     # 4. Building a rule-based system
     # Compute the mean value of the pitch for each speaker
@@ -97,6 +78,7 @@ def main():
     except:
         print("Division by zero")
 
+    # Compute the value of the threshold
     pitch_threshold = (mean_women + mean_man)/2
     print("Done in " + str(time.time() - start_time) + " seconds.\n")
     print("Finished to compute the model in " + str(time.time() - start_time_) + " seconds.\n")
@@ -150,7 +132,7 @@ def main():
             pitch_of_voiced_frames_in_each_samples_UT.append(pitch_voiced_autocorr(set_of_samples_frames_UT[i], sampling_frequencies_UT[i], 0.3)[0])
         print("Done in " + str(time.time() - start_time) + " seconds.\n")
 
-    pitch_treshold = 100  # 134.49506116189434
+    # pitch_threshold = 100  # 134.49506116189434 # Computed one block above
 
     print("Apply the rule-based system")
     start_time = time.time()
@@ -178,48 +160,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-"""
-from ts_project_s_lib import wav_import_all, normalize, splicer
-import matplotlib.pyplot as plt
-import numpy as np
-
-show = 0 # Show figures
-
-fig_directory = './figures_genareted'
-
-plt.close('all')
-
-# Extract samples, sampling frequencies and filenames from the wave files in the samples directory
-samples_set, sampling_frequencies, filenames = wav_import_all ("./samples")
-
-if show:
-    for i in range(len(samples_set)):
-        fig = plt.figure(i)
-        plt.title(filenames[i] + ' non-normalized, time of sampling = ' + str(len(samples_set[i])/float(sampling_frequencies[i])) + ' s')
-        plt.plot(np.arange(len(samples_set[i]))/float(sampling_frequencies[i]), samples_set[i])
-        plt.ylabel('Amplitude')
-        plt.xlabel('Time [s]')
-        fig.set_size_inches(16/2, 9/2, forward=True)
-        plt.savefig(fig_directory + '/non-normalized/' + filenames[i] + '_non-normalized.svg', bbox_inches='tight', figsize=(16/2.54, 9/2.54))
-    
-normalized = normalize(samples_set)
-
-if show:
-    for i in range(len(samples_set)):
-        fig = plt.figure(i+len(samples_set))
-        plt.title(filenames[i] + ' normalized, time of sampling = ' + str(len(samples_set[i])/float(sampling_frequencies[i])) + ' s')
-        plt.plot(np.arange(len(normalized[i]))/float(sampling_frequencies[i]), normalized[i])
-        plt.ylabel('Amplitude')
-        plt.xlabel('Time [s]')
-        fig.set_size_inches(16/2, 9/2, forward=True)
-        plt.savefig(fig_directory + '/normalized/' + filenames[i] + '_normalized.svg', bbox_inches='tight', figsize=(16/2.54, 9/2.54))
-
-plt.show()
-
-widths_arrays = np.ones(len(normalized))*100 # ms
-shifting_steps_arrays = np.ones(len(normalized))*100 # ms
-windows_arrays = splicer(normalized, widths_arrays, shifting_steps_arrays, sampling_frequencies)
-
-# DUT
-"""
